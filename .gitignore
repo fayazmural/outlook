@@ -1,0 +1,54 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.env
+
+# TypeScript
+dist/
+*.tsbuildinfo
+
+# ElasticSearch Data
+esdata/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Build output
+build/
+dist/
+
+# TypeScript cache and config
+*.tsbuildinfo
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Optional environment variable file
+.env
+
+# eslint
+.eslintcache
+
+# Test coverage
+coverage/
+
+# Temporary files
+temp/
+*.tmp

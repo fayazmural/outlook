@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./DockerFile # Ensure this matches the filename exactly
+    ports:
+      - "3000:3000"
+    environment:
+      SESSION_SECRET: ${SESSION_SECRET}
+      OUTLOOK_CLIENT_ID: ${OUTLOOK_CLIENT_ID}
+      OUTLOOK_CLIENT_SECRET: ${OUTLOOK_CLIENT_SECRET}
+      OUTLOOK_CALLBACK_URL: ${OUTLOOK_CALLBACK_URL}
+      ELASTICSEARCH_USER: ${ELASTICSEARCH_USER}
+      ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      ELASTICSEARCH_URL: ${ELASTICSEARCH_URL}
+      JWT_ACCESS_LIFETIME: ${JWT_ACCESS_LIFETIME}
+    depends_on:
+      elasticsearch:
+        condition: service_healthy # Wait until the elasticsearch service is healthy
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    environment:
+      - discovery.type=single-node
+      - ELASTICSEARCH_USER=${ELASTICSEARCH_USER} 
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200/"] # Command to check Elasticsearch health
+      interval: 30s # Check every 30 seconds
+      timeout: 10s # Timeout for each check
+      retries: 5 # Retry 5 times before considering the service unhealthy
+
+volumes:
+  esdata:
+    driver: local

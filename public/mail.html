@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Sync</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Optional: Link to a CSS file for styling -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f4;
+      }
+      h1 {
+        color: #333;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .no-emails {
+        color: #888;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Synced Emails</h1>
+    <div id="email-container">
+      <table id="email-table">
+        <thead>
+          <tr>
+            <th>Sender</th>
+            <th>Subject</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="2" class="no-emails">No emails to display.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      // Fetch emails from the server and display them in the table
+      async function loadEmails() {
+        try {
+          const response = await fetch("/mails"); // Adjust the endpoint as necessary
+          const data = await response.json();
+          const emails = data.data;
+
+          const emailTableBody = document.querySelector("#email-table tbody");
+          emailTableBody.innerHTML = ""; // Clear existing rows
+
+          if (emails.length > 0) {
+            emails.forEach((email) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                            <td>${email.sender}</td>
+                            <td>${email.subject}</td>
+                        `;
+              emailTableBody.appendChild(row);
+            });
+          } else {
+            // Show no emails message if the array is empty
+            emailTableBody.innerHTML =
+              '<tr><td colspan="2" class="no-emails">No emails to display.</td></tr>';
+          }
+        } catch (error) {
+          console.error("Error loading emails:", error);
+          alert("Failed to load emails. Please try again later.");
+        }
+      }
+
+      // Load emails when the page is ready
+      document.addEventListener("DOMContentLoaded", loadEmails);
+    </script>
+  </body>
+</html>
